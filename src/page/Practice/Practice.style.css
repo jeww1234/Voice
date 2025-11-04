@@ -1,0 +1,17 @@
+.Practice {
+  display: flex;
+  height: 100vh;
+}
+
+.option-area {
+  flex: 2.5;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-right: 1px solid #ccc;
+}
+
+.recorder-area {
+  flex: 7.5;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.4);
+}

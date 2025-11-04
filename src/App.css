@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(180deg, #a9d0ff 0%, #ffffff 100%);
+  min-height: 100vh;
+  color: #333;
+}
+#app {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.screen {
+  display: none;
+  min-height: 90vh;
+  padding: 20px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.screen.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Practice {
+  animation: fadeIn2 0.5s ease-in;
+}
+
+@keyframes fadeIn2 {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

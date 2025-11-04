@@ -1,0 +1,29 @@
+.select-options{
+    padding: 25px 0;
+}
+
+.option-group button {
+  margin: 6px 3px;
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.option-group button.selected {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.createBtn {
+  margin-top: 50px;
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: white;
+  color: #007bff;
+  font-weight: bolder;
+}
