@@ -17,10 +17,10 @@ const SelectOptions: React.FC = () => {
         <h3>1. 언어 선택</h3>
         <div className="option-group">
           <button className={language === 'ko' ? 'selected' : ''} onClick={() => setLanguage('ko')}>
-            한국어 🇰🇷
+            한국어(KR)
           </button>
           <button className={language === 'en' ? 'selected' : ''} onClick={() => setLanguage('en')}>
-            영어 🇺🇸
+            영어(US)
           </button>
         </div>
       </div>
@@ -30,10 +30,10 @@ const SelectOptions: React.FC = () => {
         <h3>2. 문장 길이</h3>
         <div className="option-group">
           <button className={length === 'short' ? 'selected' : ''} onClick={() => setLength('short')}>
-            짧은 문장 📄
+            짧은 문장
           </button>
           <button className={length === 'long' ? 'selected' : ''} onClick={() => setLength('long')}>
-            긴 문장 📰
+            긴 문장
           </button>
         </div>
       </div>

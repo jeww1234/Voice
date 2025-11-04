@@ -9,6 +9,7 @@
   background-color: #fff;
   cursor: pointer;
   border-radius: 6px;
+  font-weight: bolder;
 }
 
 .option-group button.selected {
