@@ -116,30 +116,12 @@
     color: #a9d0ff;
 }
 
-.btn-area {
+.analysis-placeholder{
+    font-size: 2rem;
+    height: 100%;
+    font-weight: bolder;
     display: flex;
-}
-
-.btn-primary2 {
-    background: #fff;
-    width: 12rem;
-    height: 6rem;
-    color: #666;
-    border: none;
-    /* padding: 15px 40px; */
-    font-size: 1.6rem;
-    border-radius: 160px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    margin-left: 1.5rem;
-}
-.btn-primary2 > a {
-    text-decoration: none;
-    color: #333;
-    transition: all 0.3s ease;
-}
-.btn-primary2:hover > a {
-    color: #fff;
-    transition: all 0.3s ease;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

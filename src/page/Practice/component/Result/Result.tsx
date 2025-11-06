@@ -6,10 +6,18 @@ const Result = () => {
   const { speechResult, analysisResult, currentSentence } = usePracticeStore();
   console.log("result", analysisResult);
 
-  if (!analysisResult) return null;
+  if (!analysisResult) {
+    return (
+      <div className="analysis-placeholder">
+        <div>녹화를 완료하면</div>
+        <div>분석 결과가 여기에 표시됩니다.</div>
+      </div>
+    );
+  }
 
   const { summary, scoreBreakdown, improvementTips } =
     generateFeedbackParts(analysisResult);
+  console.log("analysisResult", analysisResult);
 
   console.log("🧠 종합 평가:", summary);
   console.log("📊 점수 바:", scoreBreakdown);
@@ -48,20 +56,6 @@ const Result = () => {
             </div>
             <p>종합 정확도</p>
           </div>
-        </div>
-        <div className="btn-area">
-          <button className="btn-primary2" id="retryBtn">
-            다시
-            <br />
-            연습하기
-          </button>
-          <button className="btn-primary2">
-            <a href="/">
-              처음으로
-              <br />
-              돌아가기
-            </a>
-          </button>
         </div>
       </div>
     </div>

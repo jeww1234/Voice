@@ -25,6 +25,9 @@ export class LipSyncAnalyzer {
     );
     this.lipDataBuffer.push(classification);
   }
+
+
+
   async analyzeLipSync(targetText, recognizedText, language) {
     const expectedPhonemes = this.phonemeMapper.textToPhonemes(
       targetText,
@@ -56,6 +59,9 @@ export class LipSyncAnalyzer {
       expectedVisemeCount: expectedVisemes.length,
     };
   }
+
+
+
   calculateLipSyncScore(expectedVisemes, actualVisemes) {
     if (actualVisemes.length === 0) return 0;
     const dtw = this.dynamicTimeWarping(expectedVisemes, actualVisemes);
@@ -85,8 +91,9 @@ export class LipSyncAnalyzer {
     const widthDiff = Math.abs(v1.lipWidth - v2.lipWidth);
     return heightDiff * 0.6 + widthDiff * 0.4;
   }
-  calculateSpeechAccuracy(original, recognized) {
+  calculateSpeechAccuracy(original:string, recognized:string) {
     if (!recognized) return 0;
+
     const originalWords = original
       .replace(/[^\w\s가-힣]/g, "")
       .toLowerCase()
@@ -95,6 +102,7 @@ export class LipSyncAnalyzer {
       .replace(/[^\w\s가-힣]/g, "")
       .toLowerCase()
       .split(/\s+/);
+      
     let matches = 0;
     const maxLength = Math.max(originalWords.length, recognizedWords.length);
     for (
@@ -116,14 +124,14 @@ export class LipSyncAnalyzer {
     }
     return Math.round((matches / maxLength) * 100);
   }
-  stringSimilarity(s1, s2) {
+  stringSimilarity(s1:string, s2:string) {
     const longer = s1.length > s2.length ? s1 : s2;
     const shorter = s1.length > s2.length ? s2 : s1;
     if (longer.length === 0) return 1.0;
     const editDistance = this.levenshteinDistance(longer, shorter);
     return (longer.length - editDistance) / longer.length;
   }
-  levenshteinDistance(s1, s2) {
+  levenshteinDistance(s1:string, s2:string) {
     const costs = [];
     for (let i = 0; i <= s1.length; i++) {
       let lastValue = i;

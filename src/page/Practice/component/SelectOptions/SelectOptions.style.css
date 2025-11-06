@@ -1,3 +1,9 @@
+.select-options {
+  padding: 20px;
+  background-color: #b4ecfa;
+  height: 100%;
+}
+
 .option-group button {
   margin: 6px 2px;
   padding: 6px 8px;
@@ -23,4 +29,23 @@
   background-color: white;
   color: #007bff;
   font-weight: bolder;
+}
+
+.btn-area {
+  display: flex;
+}
+
+.btn-primary2 {
+  background: #fff;
+  width: 7rem;
+  height: 3.5rem;
+  color: #666;
+  border: 2px solid black;
+  /* padding: 15px 40px; */
+  font-size: 1rem;
+  border-radius: 160px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bolder;
+  margin: 1.5rem 5px;
 }

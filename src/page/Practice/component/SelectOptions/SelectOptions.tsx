@@ -29,8 +29,12 @@ const SelectOptions: React.FC = () => {
   const isReady = language && length && category;
 
   const handleGenerate = () => {
+    setSentence("");
     if (language && length && category) {
-      const pool = sentences[language as SentenceLanguage]?.[category as SentenceCategory]?.[length as SentenceLength];
+      const pool =
+        sentences[language as SentenceLanguage]?.[
+          category as SentenceCategory
+        ]?.[length as SentenceLength];
       if (pool?.length) {
         const random = pool[Math.floor(Math.random() * pool.length)];
         console.log("✅ 선택된 문장:", random);
@@ -98,9 +102,26 @@ const SelectOptions: React.FC = () => {
       </div>
 
       {/* 문장 생성 버튼 */}
-      <button className="createBtn" disabled={!isReady} onClick={handleGenerate}>
+      <button
+        className="createBtn"
+        disabled={!isReady}
+        onClick={handleGenerate}
+      >
         문장 생성하기
       </button>
+
+      <div className="btn-area">
+        <button className="btn-primary2">
+          다시
+          <br />
+          연습하기
+        </button>
+        <button className="btn-primary2">
+          처음으로
+          <br />
+          돌아가기
+        </button>
+      </div>
     </div>
   );
 };

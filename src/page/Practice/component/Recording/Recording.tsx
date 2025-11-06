@@ -28,7 +28,6 @@ declare global {
 const Recording = () => {
   const lipSyncAnalyzer = useRef(new LipSyncAnalyzer()).current;
 
-
   const {
     setAnalysisResult,
     speechResult,
@@ -38,12 +37,14 @@ const Recording = () => {
     addChunk,
     recordedChunks,
     setSpeechResult,
+    setRecordedChunks,
   } = usePracticeStore();
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const recordBtnRef = useRef<HTMLButtonElement>(null);
   const stopBtnRef = useRef<HTMLButtonElement>(null);
+  
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [lipDetected, setLipDetected] = useState(false);
@@ -243,9 +244,14 @@ const Recording = () => {
       alert("Speech Recognition API를 지원하지 않는 브라우저입니다.");
     }
   };
+  
+  
   const startRecording = () => {
     if (!streamRef.current || !recordBtnRef.current || !stopBtnRef.current)
       return;
+
+    setSpeechResult("");
+    setRecordedChunks([]);
 
     // 버튼 상태
     recordBtnRef.current.disabled = true;
@@ -283,20 +289,22 @@ const Recording = () => {
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state !== "inactive"
     ) {
+      mediaRecorderRef.current.onstop = async () => {
+        if (speechResult && speechResult.trim().length > 0) {
+          const result = await lipSyncAnalyzer.analyzeLipSync(
+            currentSentence,
+            speechResult,
+            "ko"
+          );
+          console.log("최종 점수:", result.finalScore);
+          console.log("상세 분석:", result.detailedAnalysis);
+          setAnalysisResult(result);
+        } else {
+          console.warn("⚠️ 음성 인식 결과가 비어 있음. 분석 생략됨.");
+        }
+      };
       mediaRecorderRef.current.stop();
-      (async () => {
-        const result = await lipSyncAnalyzer.analyzeLipSync(
-          currentSentence,
-          speechResult,
-          "ko"
-        );
-        console.log("최종 점수:", result.finalScore);
-        console.log("상세 분석:", result.detailedAnalysis);
-        setAnalysisResult(result); // ✅ 분석 결과 저장
-
-      })();
     }
-
     stopSpeechRecognition();
   };
 
