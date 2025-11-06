@@ -1,0 +1,145 @@
+/* Analysis Result */
+.result-content {
+    display: flex;
+    gap: 30px;
+    margin: 10px 0;
+}
+
+.accuracy-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(0deg, #a9d0ff 0%, #ffffff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2980b9;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.result-details {
+    flex: 1;
+}
+
+.detail-item {
+    margin-bottom: 20px;
+}
+
+.detail-item h4 {
+    margin-bottom: 4px;
+    color: #555;
+    font-size: 1.2rem;
+}
+
+.detail-item p {
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    line-height: 2;
+}
+
+/* Feedback Styles */
+.feedback-excellent { 
+    color: #27ae60; 
+    font-size: 1.2rem; 
+    margin-bottom: 10px; 
+    font-weight: bold;
+}
+
+.feedback-good { 
+    color: #2980b9; 
+    font-size: 1.2rem; 
+    margin-bottom: 10px; 
+    font-weight: bold;
+}
+
+.feedback-fair { 
+    color: #f39c12; 
+    font-size: 1.2rem; 
+    margin-bottom: 10px; 
+    font-weight: bold;
+}
+
+.feedback-poor { 
+    color: #e74c3c; 
+    font-size: 1.2rem; 
+    margin-bottom: 10px; 
+    font-weight: bold;
+}
+
+.score-breakdown {
+    margin: 20px 0;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.score-label {
+    min-width: 120px;
+    font-weight: bold;
+    color: #555;
+}
+
+.score-bar {
+    flex: 1;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.score-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #a9d0ff 0%, #1e426e 100%);
+    transition: width 1s ease;
+}
+
+.score-value {
+    min-width: 50px;
+    text-align: right;
+    font-weight: bold;
+    color: #a9d0ff;
+}
+
+.btn-area {
+    display: flex;
+}
+
+.btn-primary2 {
+    background: #fff;
+    width: 12rem;
+    height: 6rem;
+    color: #666;
+    border: none;
+    /* padding: 15px 40px; */
+    font-size: 1.6rem;
+    border-radius: 160px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    margin-left: 1.5rem;
+}
+.btn-primary2 > a {
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+}
+.btn-primary2:hover > a {
+    color: #fff;
+    transition: all 0.3s ease;
+}

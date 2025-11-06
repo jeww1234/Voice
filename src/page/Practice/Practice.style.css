@@ -4,14 +4,19 @@
 }
 
 .option-area {
-  flex: 2.5;
+  flex: 1.5;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.2);
   border-right: 1px solid #ccc;
 }
 
 .recorder-area {
-  flex: 7.5;
+  flex: 5;
+  padding: 20px;
+}
+
+.result-area{
+  flex: 3.5;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.4);
 }

@@ -1,43 +1,14 @@
 import "./Recording.style.css";
 import { usePracticeStore } from "../../../../store/usePracticeStore";
 import { useEffect, useRef, useState } from "react";
-import { LipSyncAnalyzer } from "../../../../utils/LipSyncAnalyzer";
-
-declare global {
-  interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
-
-  interface SpeechRecognition extends EventTarget {
-    continuous: boolean;
-    interimResults: boolean;
-    lang: string;
-    start: () => void;
-    stop: () => void;
-    onresult: (event: SpeechRecognitionEvent) => void;
-    onerror: (event: any) => void;
-    onend: () => void;
-  }
-
-  interface SpeechRecognitionEvent extends Event {
-    results: SpeechRecognitionResultList;
-  }
-}
 
 const Recording = () => {
-  const lipSyncAnalyzer = useRef(new LipSyncAnalyzer()).current;
-
-
   const {
-    setAnalysisResult,
-    speechResult,
     currentSentence,
     isRecording,
     setRecording,
     addChunk,
     recordedChunks,
-    setSpeechResult,
   } = usePracticeStore();
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -47,12 +18,6 @@ const Recording = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [lipDetected, setLipDetected] = useState(false);
-  const [lipLandmarksHistory, setLipLandmarksHistory] = useState<any[]>([]); // 입술 랜드마크 히스토리 상태 정의
-
-  // 음성 인식 상태 추가
-  const [isSpeechRecording, setIsSpeechRecording] = useState(false);
-
-  const recognitionRef = useRef<SpeechRecognition | null>(null); // 음성 인식 객체를 ref로 저장
 
   // 카메라 초기화
   const initializeCamera = async () => {
@@ -95,69 +60,17 @@ const Recording = () => {
       minTrackingConfidence: 0.5,
     });
 
-    const captureLipData = (landmarks: any) => {
-      const upperLip = [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291];
-      const lowerLip = [146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
-
-      // 입술 좌표 추출
-      const lipCoords = [...upperLip, ...lowerLip].map((index) => {
-        const landmark = landmarks[index]; // 인덱스에 해당하는 랜드마크
-        // landmark가 유효한지 체크하고, 유효하지 않으면 경고 메시지 출력
-        if (
-          landmark &&
-          typeof landmark.x === "number" &&
-          typeof landmark.y === "number"
-        ) {
-          return {
-            x: landmark.x * 640, // 화면 너비에 맞게 좌표 비율 조정
-            y: landmark.y * 480, // 화면 높이에 맞게 좌표 비율 조정
-          };
-        } else {
-          // 잘못된 인덱스나 랜드마크가 없으면 기본값 (0, 0)으로 처리
-          console.warn(`잘못된 랜드마크 인덱스: ${index} 또는 값이 비어있음`);
-          return { x: 0, y: 0 };
-        }
-      });
-
-      // lipLandmarksHistory 배열에 좌표 추가
-      setLipLandmarksHistory((prevHistory) => [...prevHistory, lipCoords]);
-    };
-
-    //입술 추적
     faceMesh.onResults((results: any) => {
-      // 캔버스를 초기화
       canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-        const landmarks = results.multiFaceLandmarks[0]; // 첫 번째 얼굴의 랜드마크
-
-        // 입술 랜드마크 그리기
+        const landmarks = results.multiFaceLandmarks[0];
         drawLipLandmarks(canvasCtx, landmarks);
-        // 입술 좌표를 저장 함수 호출
-        captureLipData(landmarks);
-        lipSyncAnalyzer.captureLipData(landmarks, "ko");
-
-        setLipDetected(true); // 입술이 인식된 상태로 설정
+        setLipDetected(true);
       } else {
-        setLipDetected(false); // 입술이 인식되지 않으면 false
+        setLipDetected(false);
       }
     });
-
-    const extractLipLandmarks = (landmarks: any) => {
-      // 상입술, 하입술 랜드마크 인덱스
-      const upperLip = [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291]; // 상입술 인덱스
-      const lowerLip = [146, 91, 181, 84, 17, 314, 405, 321, 375, 291]; // 하입술 인덱스
-
-      // 입술 랜드마크 좌표 추출
-      const lipCoords = [...upperLip, ...lowerLip].map((index) => {
-        return {
-          x: landmarks[index].x * 640, // 화면 너비에 맞게 비율 조정
-          y: landmarks[index].y * 480, // 화면 높이에 맞게 비율 조정
-        };
-      });
-
-      return lipCoords; // 입술 좌표 반환
-    };
 
     const camera = new (window as any).Camera(videoElement, {
       onFrame: async () => {
@@ -213,109 +126,46 @@ const Recording = () => {
     initializeFaceMesh();
   }, []);
 
-  // 음성 인식 초기화 (한 번만)
-  const initializeSpeechRecognition = () => {
-    const SpeechRecognition =
-      (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition;
-
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true; // interimResults를 true로 설정하면 실시간으로 음성 결과가 표시됩니다.
-
-      recognition.onresult = (event: any) => {
-        const transcript =
-          event.results[event.results.length - 1][0].transcript;
-        setSpeechResult(transcript); // 음성 인식 결과 업데이트
-      };
-
-      recognition.onerror = (event: any) => {
-        console.error("SpeechRecognition error", event.error);
-      };
-
-      recognition.onend = () => {
-        setIsSpeechRecording(false); // 음성 인식이 끝나면 자동으로 상태 변경
-      };
-
-      recognitionRef.current = recognition; // 음성 인식 객체를 ref로 저장
-    } else {
-      alert("Speech Recognition API를 지원하지 않는 브라우저입니다.");
-    }
-  };
+  // 녹화 시작
   const startRecording = () => {
     if (!streamRef.current || !recordBtnRef.current || !stopBtnRef.current)
       return;
 
-    // 버튼 상태
     recordBtnRef.current.disabled = true;
     stopBtnRef.current.disabled = false;
     recordBtnRef.current.classList.add("recording");
 
     setRecording(true);
-
-    // 🎥 영상 녹화 시작
     const recorder = new MediaRecorder(streamRef.current);
-
     recorder.ondataavailable = (event) => {
-      if (event.data.size > 0) addChunk(event.data);
+      if (event.data.size > 0) {
+        addChunk(event.data);
+      }
     };
-
     recorder.start();
     mediaRecorderRef.current = recorder;
-
-    // 🎤 음성 인식 시작
-    startSpeechRecognition();
   };
 
+  // 녹화 중지
   const stopRecording = () => {
-    console.log("stop");
     if (!recordBtnRef.current || !stopBtnRef.current) return;
 
-    // 버튼 상태
-    recordBtnRef.current.classList.remove("recording");
     recordBtnRef.current.disabled = false;
     stopBtnRef.current.disabled = true;
+    recordBtnRef.current.classList.remove("recording");
 
     setRecording(false);
-
     if (
       mediaRecorderRef.current &&
       mediaRecorderRef.current.state !== "inactive"
     ) {
       mediaRecorderRef.current.stop();
-      (async () => {
-        const result = await lipSyncAnalyzer.analyzeLipSync(
-          currentSentence,
-          speechResult,
-          "ko"
-        );
-        console.log("최종 점수:", result.finalScore);
-        console.log("상세 분석:", result.detailedAnalysis);
-        setAnalysisResult(result); // ✅ 분석 결과 저장
-
-      })();
     }
-
-    stopSpeechRecognition();
-  };
-
-  // 음성 인식 시작
-  const startSpeechRecognition = () => {
-    if (!recognitionRef.current) {
-      initializeSpeechRecognition();
-    }
-    recognitionRef.current?.start(); // 음성 인식 시작
-    setIsSpeechRecording(true);
-  };
-
-  // 음성 인식 중지
-  const stopSpeechRecognition = () => {
-    recognitionRef.current?.stop(); // 음성 인식 중지
   };
 
   const blob = new Blob(recordedChunks, { type: "video/webm" });
   const url = URL.createObjectURL(blob);
+
   return (
     <div className="">
       <div className="practice-header">
@@ -327,6 +177,7 @@ const Recording = () => {
           연습할 문장 : <span id="targetSentence">{currentSentence}</span>
         </h3>
       </div>
+
       <div className="video-container">
         <video id="videoElement" ref={videoRef} autoPlay playsInline></video>
         <canvas id="lipCanvas" ref={canvasRef}></canvas>
@@ -350,24 +201,22 @@ const Recording = () => {
           ref={recordBtnRef}
           onClick={startRecording}
         >
-          <span className="icon">
-            🎙️<span>녹화 시작</span>
-          </span>
+          <span className="icon">🎙️</span>
+          <span>녹화 시작</span>
         </button>
         <button
           className="btn-control"
           id="stopBtn"
           ref={stopBtnRef}
           onClick={stopRecording}
+          disabled
         >
-          <span className="icon">
-            🟥<span>녹화 중지</span>
-          </span>
+          <span className="icon">🟥</span>
+          <span>녹화 중지</span>
         </button>
         <label className="btn-control" htmlFor="fileInput">
-          <span className="icon">
-            📁<span>파일 업로드</span>
-          </span>
+          <span className="icon">📁</span>
+          <span>파일 업로드</span>
         </label>
         <input
           type="file"
@@ -376,6 +225,16 @@ const Recording = () => {
           style={{ display: "none" }}
         />
       </div>
+
+      {!isRecording && recordedChunks.length > 0 && (
+        <div className="preview-container">
+          <h4>녹화된 영상 미리보기</h4>
+          <video src={url} controls width="100%" />
+          <a href={url} download="recording.webm" className="btn-secondary">
+            영상 다운로드
+          </a>
+        </div>
+      )}
     </div>
   );
 };
