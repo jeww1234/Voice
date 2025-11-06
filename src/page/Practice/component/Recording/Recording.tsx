@@ -47,11 +47,12 @@ const Recording = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const [lipDetected, setLipDetected] = useState(false);
   const [lipLandmarksHistory, setLipLandmarksHistory] = useState<any[]>([]); // 입술 랜드마크 히스토리 상태 정의
-  console.log(lipLandmarksHistory)
+
+
 
   // 음성 인식 상태 추가
   const [isSpeechRecording, setIsSpeechRecording] = useState(false);
-  console.log(isSpeechRecording)
+
 
   const recognitionRef = useRef<SpeechRecognition | null>(null); // 음성 인식 객체를 ref로 저장
 

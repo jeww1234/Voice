@@ -25,10 +25,20 @@ interface PracticeState {
   setRecording: (state: boolean) => void;
   addChunk: (chunk: Blob) => void;
   setSpeechResult: (text: string) => void; // 음성 인식 결과 업데이트 함수
-  analysisResult: any | null;
-  setAnalysisResult: (result: any) => void;
-  setRecordedChunks: (chunks: any) => void;
+  analysisResult: LipSyncResult | null;
+  setAnalysisResult: (result: LipSyncResult) => void;
+  setRecordedChunks: (chunks: Blob[]) => void;
 }
+
+interface LipSyncResult {
+  finalScore: number;
+  lipSyncScore: number;
+  speechScore: number;
+  detailedAnalysis: any; // 이건 나중에 더 구체화 가능
+  lipDataCount: number;
+  expectedVisemeCount: number;
+}
+
 
 export const usePracticeStore = create<PracticeState>((set) => ({
   speechResult: null, // 초기값은 null
@@ -77,7 +87,7 @@ export const usePracticeStore = create<PracticeState>((set) => ({
       },
       news: {
         short: [
-          "오늘의 뉴스를 전해드립니다",
+          "오늘의 뉴스를 전해 드립니다",
           "경제가 회복세를 보이고 있습니다",
         ],
         long: [

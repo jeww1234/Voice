@@ -28,7 +28,7 @@ export class LipSyncAnalyzer {
 
 
 
-  async analyzeLipSync(targetText, recognizedText, language) {
+  async analyzeLipSync(targetText:string, recognizedText:string, language:string) {
     const expectedPhonemes = this.phonemeMapper.textToPhonemes(
       targetText,
       language
