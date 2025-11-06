@@ -2,17 +2,17 @@ import { VisemeAnalyzer } from "./VisemeAnalyzer";
 
 export class PhonemeVisemeMapper {
   private visemeAnalyzer: VisemeAnalyzer;
-  constructor(visemeAnalyzer) {
+  constructor(visemeAnalyzer: VisemeAnalyzer) {
     this.visemeAnalyzer = visemeAnalyzer;
   }
-  textToPhonemes(text, language) {
+  textToPhonemes(text: string, language: string) {
     if (language === "ko") {
       return this.koreanTextToPhonemes(text);
     } else {
       return this.englishTextToPhonemes(text);
     }
   }
-  koreanTextToPhonemes(text) {
+  koreanTextToPhonemes(text: string) {
     const phonemes = [];
     const HANGUL_BASE = 0xac00;
     const HANGUL_END = 0xd7a3;
@@ -137,7 +137,7 @@ export class PhonemeVisemeMapper {
     }
     return phonemes;
   }
-  englishTextToPhonemes(text) {
+  englishTextToPhonemes(text: string) {
     const phonemes = [];
     // 특수문자 제거하고 소문자로 변환
     const cleanText = text.toLowerCase().replace(/[^a-z\s]/g, "");
@@ -154,7 +154,15 @@ export class PhonemeVisemeMapper {
     }
     return phonemes;
   }
-  phonemeToExpectedViseme(phoneme, language) {
+  phonemeToExpectedViseme(
+    phoneme: {
+      symbol: string;
+      duration: number;
+      timestamp: number;
+      originalChar: string;
+    },
+    language: string
+  ) {
     const visemeDB = this.visemeAnalyzer.getVisemeDatabase(language);
     for (const viseme of visemeDB) {
       if (viseme.phonemes.includes(phoneme.symbol)) {

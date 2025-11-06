@@ -32,10 +32,8 @@ const Recording = () => {
     setAnalysisResult,
     speechResult,
     currentSentence,
-    isRecording,
     setRecording,
     addChunk,
-    recordedChunks,
     setSpeechResult,
     setRecordedChunks,
   } = usePracticeStore();
@@ -49,9 +47,11 @@ const Recording = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const [lipDetected, setLipDetected] = useState(false);
   const [lipLandmarksHistory, setLipLandmarksHistory] = useState<any[]>([]); // 입술 랜드마크 히스토리 상태 정의
+  console.log(lipLandmarksHistory)
 
   // 음성 인식 상태 추가
   const [isSpeechRecording, setIsSpeechRecording] = useState(false);
+  console.log(isSpeechRecording)
 
   const recognitionRef = useRef<SpeechRecognition | null>(null); // 음성 인식 객체를 ref로 저장
 
@@ -143,22 +143,6 @@ const Recording = () => {
         setLipDetected(false); // 입술이 인식되지 않으면 false
       }
     });
-
-    const extractLipLandmarks = (landmarks: any) => {
-      // 상입술, 하입술 랜드마크 인덱스
-      const upperLip = [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291]; // 상입술 인덱스
-      const lowerLip = [146, 91, 181, 84, 17, 314, 405, 321, 375, 291]; // 하입술 인덱스
-
-      // 입술 랜드마크 좌표 추출
-      const lipCoords = [...upperLip, ...lowerLip].map((index) => {
-        return {
-          x: landmarks[index].x * 640, // 화면 너비에 맞게 비율 조정
-          y: landmarks[index].y * 480, // 화면 높이에 맞게 비율 조정
-        };
-      });
-
-      return lipCoords; // 입술 좌표 반환
-    };
 
     const camera = new (window as any).Camera(videoElement, {
       onFrame: async () => {
@@ -321,9 +305,6 @@ const Recording = () => {
   const stopSpeechRecognition = () => {
     recognitionRef.current?.stop(); // 음성 인식 중지
   };
-
-  const blob = new Blob(recordedChunks, { type: "video/webm" });
-  const url = URL.createObjectURL(blob);
   return (
     <div className="">
       <div className="practice-header">
